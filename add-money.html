@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Add Money Options</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Segoe+UI&display=swap');
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      /* Background with subtle blue gradient */
+      background: linear-gradient(135deg, #2a4d69 0%, #4b86b4 50%, #adcbe3 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      overflow: hidden;
+      position: relative;
+    }
+    /* Glassmorphism container */
+    .container {
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      width: 320px;
+      padding: 30px 25px;
+      text-align: center;
+      color: #e0e7ff;
+    }
+    h1 {
+      margin-bottom: 20px;
+      font-weight: 700;
+      font-size: 1.8rem;
+      color: #dbe9ff;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+    .option {
+      background: rgba(255, 255, 255, 0.25);
+      color: #f0f8ff;
+      margin: 15px 0;
+      padding: 15px 20px;
+      border-radius: 12px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(69, 2, 252, 0.2);
+      transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+      user-select: none;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .option:hover {
+      background: rgba(26, 1, 247, 0.4);
+      transform: translateY(-4px);
+      box-shadow: 0 6px 20px rgba(62, 6, 216, 0.35);
+    }
+    .option i {
+      margin-right: 10px;
+      font-size: 1.3rem;
+      vertical-align: middle;
+      filter: drop-shadow(0 1px 1px rgba(55, 2, 245, 0.15));
+    }
+  </style>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+</head>
+<body>
+  <div class="container">
+    <h1>Add Money Options</h1>
+    <div class="option" onclick="alert('Add Money by Bank Clicked!')">
+      <i class="fas fa-university"></i> Add Money by Bank
+    </div>
+    <div class="option" onclick="alert('Add Money by Card Clicked!')">
+      <i class="fas fa-credit-card"></i> Add Money by Card
+    </div>
+  </div>
+</body>
+</html>

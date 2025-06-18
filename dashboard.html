@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>InstaCash</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      /* Base */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", sans-serif;
+      }
+
+      body {
+        background-color: #f2f4f7;
+        color: #333;
+      }
+
+      /* Header */
+      .header {
+        background: linear-gradient(135deg, #0066d6, #00aaee);
+        color: #fff;
+        padding: 1rem;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+      }
+
+      .header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .profile-box {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+      }
+
+      .profile-box img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        transition: transform 0.3s;
+      }
+
+      .profile-box:hover img {
+        transform: scale(1.05);
+      }
+
+      .welcome {
+        line-height: 1.1;
+      }
+
+      .welcome small {
+        font-size: 0.75rem;
+        opacity: 0.8;
+      }
+
+      /* Balance Section */
+      .balance-section {
+        background: linear-gradient(135deg, #ffffff, #f0f3f8);
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+        padding: 0.8rem 1rem;
+        border-radius: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: 0.3s;
+      }
+
+      .balance-section:hover {
+        box-shadow: 0 5px 16px rgba(0, 0, 0, 0.07);
+      }
+
+      .balance-left {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .balance-left .amount {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #00aa55;
+      }
+
+      .balance-left small {
+        font-size: 0.7rem;
+        color: #666;
+        margin-top: 2px;
+      }
+
+      .balance-icon {
+        background-color: #e6f3ff;
+        padding: 8px;
+        border-radius: 50%;
+        color: #0066d6;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .balance-icon:hover {
+        background-color: #d0e8ff;
+      }
+
+      /* Sections */
+      .quick-actions,
+      .recommended,
+      .favourites {
+        background-color: #fff;
+        padding: 1rem;
+        margin-top: 1rem;
+        border-radius: 1rem;
+      }
+
+      .section-title {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+      }
+
+      .icon-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        text-align: center;
+      }
+
+      .icon-grid div {
+        padding: 0.45rem;
+        border-radius: 12px;
+        transition: transform 0.25s, box-shadow 0.25s;
+      }
+
+      .icon-grid div:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      }
+
+      .icon-grid i {
+        font-size: 1.5rem;
+        margin-bottom: 0.25rem;
+        color: #0066d6;
+      }
+
+      /* Bottom Nav */
+      .bottom-nav {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background-color: #fff;
+        border-top: 1px solid #ccc;
+        display: flex;
+        justify-content: space-around;
+        padding: 0.5rem 0;
+      }
+
+      .bottom-nav i {
+        font-size: 1.2rem;
+        color: #777;
+        transition: color 0.2s;
+      }
+
+      .bottom-nav i.active,
+      .bottom-nav i:hover {
+        color: #0066d6;
+      }
+
+      /* Mobile Fixes */
+      @media (max-width: 360px) {
+        .icon-grid {
+          gap: 0.6rem;
+        }
+
+        .icon-grid i {
+          font-size: 1.35rem;
+        }
+      }
+
+      /* Country Select & Dropdown */
+      .country-select {
+        position: relative;
+        cursor: pointer;
+        user-select: none;
+      }
+      .country-select .selected {
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .country-dropdown {
+        position: absolute;
+        top: 120%;
+        right: 0;
+        background: #fff;
+        color: #333;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        border-radius: 10px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        display: none;
+        z-index: 999;
+        min-width: 180px;
+        max-height: 250px;
+      }
+      .country-dropdown div {
+        padding: 8px 12px;
+        transition: background 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.9rem;
+      }
+      .country-dropdown div:hover {
+        background: #f0f0f0;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <div class="header">
+      <div class="header-top">
+        <div class="profile-box" onclick="window.location='profile.html'">
+          <img src="https://i.pravatar.cc/80" alt="Profile" />
+          <div class="welcome">
+            <small>Welcome back,</small><br />
+            <strong>Sami</strong>
+          </div>
+        </div>
+        <div class="country-select" id="countrySelect">
+          <div class="selected" id="selectedCountry">
+            🇲🇾 Malaysia <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="country-dropdown" id="countryDropdown">
+            <div data-country="🇺🇸 United States">🇺🇸 United States</div>
+            <div data-country="🇬🇧 United Kingdom">🇬🇧 United Kingdom</div>
+            <div data-country="🇲🇾 Malaysia">🇲🇾 Malaysia</div>
+            <div data-country="🇨🇦 Canada">🇨🇦 Canada</div>
+            <div data-country="🇦🇪 United Arab Emirates">🇦🇪 United Arab Emirates</div>
+            <div data-country="🐪 Oman">🐪 Oman</div>
+            <div data-country="🇶🇦 Qatar">🇶🇦 Qatar</div>
+            <div data-country="🇿🇦 South Africa">🇿🇦 South Africa</div>
+            <div data-country="🇸🇦 Saudi Arabia">🇸🇦 Saudi Arabia</div>
+            <div data-country="🇹🇭 Thailand">🇹🇭 Thailand</div>
+            <div data-country="🇲🇻 Maldives">🇲🇻 Maldives</div>
+            <div data-country="🇰🇷 South Korea">🇰🇷 South Korea</div>
+            <div data-country="🇯🇵 Japan">🇯🇵 Japan</div>
+            <div data-country="🇪🇬 Egypt">🇪🇬 Egypt</div>
+            <div data-country="🇮🇹 Italy">🇮🇹 Italy</div>
+            <div data-country="🇵🇹 Portugal">🇵🇹 Portugal</div>
+            <div data-country="🇬🇷 Greece">🇬🇷 Greece</div>
+            <div data-country="🇪🇸 Spain">🇪🇸 Spain</div>
+            <div data-country="🇫🇷 France">🇫🇷 France</div>
+            <div data-country="🇩🇪 Germany">🇩🇪 Germany</div>
+            <div data-country="🇲🇹 Malta">🇲🇹 Malta</div>
+            <div data-country="🇷🇴 Romania">🇷🇴 Romania</div>
+            <div data-country="🇱🇹 Lithuania">🇱🇹 Lithuania</div>
+            <div data-country="🇳🇱 Netherlands">🇳🇱 Netherlands</div>
+            <div data-country="🇫🇮 Finland">🇫🇮 Finland</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Compact Balance Section -->
+      <div class="balance-section">
+        <div class="balance-left">
+          <span class="amount" id="balanceAmount">4.05</span>
+          <small>Total Balance</small>
+        </div>
+        <div class="balance-icon">
+          <i class="fas fa-eye"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <div class="section-title">Quick Actions</div>
+      <div class="icon-grid">
+        <div><a href="add-money.html" style="color: inherit; text-decoration: none;"><i class="fas fa-plus-circle"></i><br />Add Money</a></div>
+        <div><i class="fas fa-chart-line"></i><br />Apply Business</div>
+        <div><i class="fas fa-paper-plane"></i><br />Transfer</div>
+        <div><i class="fas fa-credit-card"></i><br />MY Cards</div>
+      </div>
+    </div>
+
+    <!-- Recommended -->
+    <div class="recommended">
+      <div class="section-title">Recommended</div>
+      <div class="icon-grid">
+        <div><i class="fas fa-exchange-alt"></i><br />Send Money</div>
+        <div><i class="fas fa-globe"></i><br />International</div>
+        <div><i class="fas fa-mobile-alt"></i><br />Top Up</div>
+        <div><i class="fas fa-bolt"></i><br />Benificially</div>
+      </div>
+    </div>
+
+    <!-- Favourites -->
+    <div class="favourites">
+      <div class="section-title">My Favourites</div>
+      <div class="icon-grid">
+        <div><i class="fas fa-phone"></i><br />MY Prepaid</div>
+        <div><i class="fas fa-tags"></i><br />Daily Deals</div>
+        <div><i class="fas fa-gift"></i><br />My Rewards</div>
+        <div><i class="fas fa-ellipsis-h"></i><br />More</div>
+      </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+      <i class="fas fa-home active"></i>
+      <i class="fas fa-shopping-cart"></i>
+      <i class="fas fa-qrcode"></i>
+      <i class="fas fa-dollar-sign"></i>
+      <i class="fas fa-map-marker-alt"></i>
+    </div>
+
+    <script>
+      // কারেন্সি ম্যাপ
+      const currencyMap = {
+        "🇺🇸 United States": "$",
+        "🇬🇧 United Kingdom": "£",
+        "🇲🇾 Malaysia": "RM",
+        "🇨🇦 Canada": "C$",
+        "🇦🇪 United Arab Emirates": "د.إ",
+        "🐪 Oman": "ر.ع",
+        "🇶🇦 Qatar": "ر.ق",
+        "🇿🇦 South Africa": "R",
+        "🇸🇦 Saudi Arabia": "ر.س",
+        "🇹🇭 Thailand": "฿",
+        "🇲🇻 Maldives": "Rf",
+        "🇰🇷 South Korea": "₩",
+        "🇯🇵 Japan": "¥",
+        "🇪🇬 Egypt": "£",
+        "🇮🇹 Italy": "€",
+        "🇵🇹 Portugal": "€",
+        "🇬🇷 Greece": "€",
+        "🇪🇸 Spain": "€",
+        "🇫🇷 France": "€",
+        "🇩🇪 Germany": "€",
+        "🇲🇹 Malta": "€",
+        "🇷🇴 Romania": "L",
+        "🇱🇹 Lithuania": "€",
+        "🇳🇱 Netherlands": "€",
+        "🇫🇮 Finland": "€"
+      };
+
+      const selectedCountry = document.getElementById("selectedCountry");
+      const balanceAmount = document.getElementById("balanceAmount");
+      const countryDropdown = document.getElementById("countryDropdown");
+
+      // Base balance
+      let baseBalance = 4.05;
+
+      // Dropdown toggle
+      const countrySelect = document.getElementById("countrySelect");
+      countrySelect.addEventListener("click", function (e) {
+        e.stopPropagation();
+        countryDropdown.style.display =
+          countryDropdown.style.display === "block" ? "none" : "block";
+      });
+
+      // Country selection handler
+      countryDropdown.querySelectorAll("div").forEach(option => {
+        option.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const selected = e.currentTarget.getAttribute("data-country");
+          selectedCountry.innerHTML = selected + ' <i class="fas fa-chevron-down"></i>';
+
+          // Update balance currency
+          let currency = currencyMap[selected] || "RM";
+          balanceAmount.textContent = currency + " " + baseBalance;
+
+          countryDropdown.style.display = "none";
+        });
+      });
+
+      // Close dropdown if clicking outside
+      document.addEventListener("click", () => {
+        countryDropdown.style.display = "none";
+      });
+
+      // Initialize default balance currency on load
+      window.onload = () => {
+        let defaultCountry = selectedCountry.textContent.trim();
+        let currency = currencyMap[defaultCountry] || "RM";
+        balanceAmount.textContent = currency + " " + baseBalance;
+      };
+      // Exchange rates relative to RM (Malaysian Ringgit)
+const exchangeRates = {
+  "🇺🇸 United States": 0.23,       // 1 RM = 0.23 USD (মনে কর, এটা উদাহরণ)
+  "🇬🇧 United Kingdom": 0.19,      // GBP
+  "🇲🇾 Malaysia": 1,               // RM নিজেই
+  "🇨🇦 Canada": 0.30,              // CAD
+  "🇦🇪 United Arab Emirates": 0.85, 
+  "🐪 Oman": 0.09,
+  "🇶🇦 Qatar": 0.88,
+  "🇿🇦 South Africa": 4.03,
+  "🇸🇦 Saudi Arabia": 0.87,
+  "🇹🇭 Thailand": 7.80,
+  "🇲🇻 Maldives": 3.50,
+  "🇰🇷 South Korea": 300,
+  "🇯🇵 Japan": 32,
+  "🇪🇬 Egypt": 7.60,
+  "🇮🇹 Italy": 0.22,
+  "🇵🇹 Portugal": 0.22,
+  "🇬🇷 Greece": 0.22,
+  "🇪🇸 Spain": 0.22,
+  "🇫🇷 France": 0.22,
+  "🇩🇪 Germany": 0.22,
+  "🇲🇹 Malta": 0.22,
+  "🇷🇴 Romania": 1.06,
+  "🇱🇹 Lithuania": 0.22,
+  "🇳🇱 Netherlands": 0.22,
+  "🇫🇮 Finland": 0.22
+};
+
+countryDropdown.querySelectorAll("div").forEach(option => {
+  option.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const selected = e.currentTarget.getAttribute("data-country");
+    selectedCountry.innerHTML = selected + ' <i class="fas fa-chevron-down"></i>';
+
+    // কারেন্সি সিম্বল
+    let currency = currencyMap[selected] || "RM";
+
+    // এক্সচেঞ্জ রেট
+    let rate = exchangeRates[selected] || 1;
+
+    // ক্যালকুলেটেড ব্যালেন্স
+    let convertedBalance = (baseBalance * rate).toFixed(2);
+
+    // দেখানো
+    balanceAmount.textContent = currency + " " + convertedBalance;
+
+    countryDropdown.style.display = "none";
+  });
+});
+
+// লোড হওয়ার সময় ডিফল্ট সেটিং
+window.onload = () => {
+  let defaultCountry = selectedCountry.textContent.trim();
+  let currency = currencyMap[defaultCountry] || "RM";
+  let rate = exchangeRates[defaultCountry] || 1;
+  let convertedBalance = (baseBalance * rate).toFixed(2);
+  balanceAmount.textContent = currency + " " + convertedBalance;
+};
+    </script>
+  </body>
+</html>
