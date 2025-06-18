@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register | My Website</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h2>Register</h2>
+    <form id="registerForm">
+      <input type="text" id="firstName" placeholder="First Name" required />
+      <input type="text" id="lastName" placeholder="Last Name" required />
+      <input type="email" id="email" placeholder="Email Address" required />
+
+      <select id="country" required>
+        <option value="">Select Country</option>
+        <option value="+1">United States</option>
+        <option value="+1">Canada</option>
+        <option value="+971">United Arab Emirates</option>
+        <option value="+60">Malaysia</option>
+        <option value="+966">Saudi Arabia</option>
+        <option value="+968">Oman</option>
+        <option value="+974">Qatar</option>
+        <option value="+27">South Africa</option>
+        <option value="+66">Thailand</option>
+        <option value="+960">Maldives</option>
+        <option value="+44">United Kingdom</option>
+        <option value="+82">South Korea</option>
+        <option value="+81">Japan</option>
+        <option value="+20">Egypt</option>
+        <option value="+39">Italy</option>
+        <option value="+30">Greece</option>
+        <option value="+351">Portugal</option>
+        <option value="+34">Spain</option>
+  <option value="+33">France</option>
+  <option value="+49">Germany</option>
+  <option value="+356">Malta</option>
+  <option value="+40">Romania</option>
+  <option value="+370">Lithuania</option>
+  <option value="+31">Netherlands</option>
+  <option value="+358">Finland</option>
+  <option value="+36">Hungary</option>
+</select>
+
+      <div class="phone-group">
+        <span id="countryCode">+___</span>
+        <input type="tel" id="phone" placeholder="Phone Number" required />
+      </div>
+
+      <input type="password" id="password" placeholder="Password" required />
+      <input type="password" id="confirmPassword" placeholder="Confirm Password" required />
+      <button type="submit">Register</button>
+      <p id="message"></p>
+      <!-- registerForm এর নিচে যোগ করো -->
+<p>Already have an account? <a href="login.html">Login here</a></p>
+    </form>
+  </div>
+
+ <script type="module" src="script.js"></script>
+</body>
+</html>
