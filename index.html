@@ -3,8 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Register | My Website</title>
+  <title>Register | InstaCash</title>
   <link rel="stylesheet" href="style.css" />
+
+  <!-- ✅ EmailJS CDN -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script type="text/javascript">
+    (function () {
+      emailjs.init("Xzwnxv67uTAAzFCL3"); // তোমার Public Key
+    })();
+  </script>
 </head>
 <body>
   <div class="container">
@@ -34,15 +42,15 @@
         <option value="+30">Greece</option>
         <option value="+351">Portugal</option>
         <option value="+34">Spain</option>
-  <option value="+33">France</option>
-  <option value="+49">Germany</option>
-  <option value="+356">Malta</option>
-  <option value="+40">Romania</option>
-  <option value="+370">Lithuania</option>
-  <option value="+31">Netherlands</option>
-  <option value="+358">Finland</option>
-  <option value="+36">Hungary</option>
-</select>
+        <option value="+33">France</option>
+        <option value="+49">Germany</option>
+        <option value="+356">Malta</option>
+        <option value="+40">Romania</option>
+        <option value="+370">Lithuania</option>
+        <option value="+31">Netherlands</option>
+        <option value="+358">Finland</option>
+        <option value="+36">Hungary</option>
+      </select>
 
       <div class="phone-group">
         <span id="countryCode">+___</span>
@@ -53,11 +61,107 @@
       <input type="password" id="confirmPassword" placeholder="Confirm Password" required />
       <button type="submit">Register</button>
       <p id="message"></p>
-      <!-- registerForm এর নিচে যোগ করো -->
-<p>Already have an account? <a href="login.html">Login here</a></p>
+      <p>Already have an account? <a href="login.html">Login here</a></p>
+      <p><a href="forgot-password.html" style="color: #007bff; text-decoration: none;">Forgot Password?</a></p>
     </form>
   </div>
 
- <script type="module" src="script.js"></script>
+  <!-- ✅ Firebase + EmailJS Script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getAuth,
+      createUserWithEmailAndPassword
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBH05N22D-ZSpjrtiJTLZGKxERZzpaqheg",
+      authDomain: "instacash-e1d5d.firebaseapp.com",
+      projectId: "instacash-e1d5d",
+      storageBucket: "instacash-e1d5d.appspot.com",
+      messagingSenderId: "123825323751",
+      appId: "1:123825323751:web:624eea7c7a733cda2d6c42"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const countrySelect = document.getElementById('country');
+    const countryCodeSpan = document.getElementById('countryCode');
+    if (countrySelect && countryCodeSpan) {
+      countryCodeSpan.textContent = countrySelect.value || '+___';
+      countrySelect.addEventListener('change', () => {
+        countryCodeSpan.textContent = countrySelect.value || '+___';
+      });
+    }
+
+    const registerForm = document.getElementById("registerForm");
+    if (registerForm) {
+      registerForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const firstName = document.getElementById("firstName").value.trim();
+        const lastName = document.getElementById("lastName").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
+        const message = document.getElementById("message");
+        const countryCode = countrySelect.value;
+
+        if (password !== confirmPassword) {
+          message.style.color = "red";
+          message.textContent = "Passwords do not match!";
+          return;
+        }
+
+        if (password.length < 6) {
+          message.style.color = "red";
+          message.textContent = "Password must be at least 6 characters.";
+          return;
+        }
+
+        if (!/^\d{7,15}$/.test(phone)) {
+          message.style.color = "red";
+          message.textContent = "Phone number must be 7-15 digits.";
+          return;
+        }
+
+        try {
+          await createUserWithEmailAndPassword(auth, email, password);
+
+          // ✅ Generate OTP
+          const otp = Math.floor(100000 + Math.random() * 900000);
+          const fullName = firstName + " " + lastName;
+
+          // ✅ Send OTP via EmailJS
+          const params = {
+            email: email,
+            name: fullName,
+            message: `Your OTP is: ${otp}`,
+            time: new Date().toLocaleString()
+          };
+
+          emailjs.send("service_cwhsnkd", "template_g11jib9", params)
+            .then(() => {
+              message.style.color = "green";
+              message.textContent = "Registration successful! OTP sent to your email ✅";
+              setTimeout(() => {
+                window.location.href = "login.html";
+              }, 3000);
+            })
+            .catch((error) => {
+              console.error("EmailJS Error:", error);
+              message.style.color = "orange";
+              message.textContent = "Registered but OTP email failed!";
+            });
+
+        } catch (error) {
+          message.style.color = "red";
+          message.textContent = "Registration failed: " + error.message;
+        }
+      });
+    }
+  </script>
 </body>
 </html>

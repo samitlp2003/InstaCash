@@ -234,6 +234,7 @@
           <div class="welcome">
             <small>Welcome back,</small><br />
             <strong>Sami</strong>
+            <p>Your UID: <span id="userUid">Loading...</span></p>
           </div>
         </div>
         <div class="country-select" id="countrySelect">
@@ -455,5 +456,36 @@ window.onload = () => {
   balanceAmount.textContent = currency + " " + convertedBalance;
 };
     </script>
+    <!-- 🔥 Firebase UID loader -->
+<script type="module">
+  // Firebase SDK ইমপোর্ট
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+  // তোমার আগের ফায়ারবেস কনফিগ
+  const firebaseConfig = {
+    apiKey: "AIzaSyBH05N22D-ZSpjrtiJTLZGKxERZzpaqheg",
+    authDomain: "instacash-e1d5d.firebaseapp.com",
+    projectId: "instacash-e1d5d",
+    storageBucket: "instacash-e1d5d.firebasestorage.app",
+    messagingSenderId: "123825323751",
+    appId: "1:123825323751:web:624eea7c7a733cda2d6c42"
+  };
+
+  // Firebase চালু
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // ইউজার লগইন আছে কি না দেখে UID বসাও
+  onAuthStateChanged(auth, user => {
+    const span = document.getElementById("userUid");
+    if (user) {
+      span.textContent = user.uid;      // ✅ UID দেখাবে
+    } else {
+      span.textContent = "Not logged in";
+    }
+  });
+</script>
+<script type="module" src="app.js"></script>
   </body>
 </html>

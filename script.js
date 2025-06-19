@@ -11,7 +11,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyBH05N22D-ZSpjrtiJTLZGKxERZzpaqheg",
   authDomain: "instacash-e1d5d.firebaseapp.com",
   projectId: "instacash-e1d5d",
-  storageBucket: "instacash-e1d5d.firebasestorage.app",
+  storageBucket: "instacash-e1d5d.appspot.com",
   messagingSenderId: "123825323751",
   appId: "1:123825323751:web:624eea7c7a733cda2d6c42"
 };
@@ -21,30 +21,8 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 // ======================
-// Country Select Dropdown Logic
+// Country code display from <select>
 // ======================
-function toggleDropdown(e) {
-  e.stopPropagation();
-  const menu = document.getElementById("country-dropdown");
-  menu.style.display = menu.style.display === "block" ? "none" : "block";
-}
-
-function selectCountry(country) {
-  document.getElementById("selected-country").innerHTML = country + ' <i class="fas fa-chevron-down"></i>';
-  document.getElementById("country-dropdown").style.display = "none";
-}
-
-document.addEventListener("click", function(event) {
-  const dropdown = document.getElementById("country-dropdown");
-  if (!document.querySelector(".country-select").contains(event.target)) {
-    dropdown.style.display = "none";
-  }
-});
-
-// ======================
-// Country code display (if you still use country select with <select> tag)
-// ======================
-// If you have country <select> and want to update code span
 const countrySelect = document.getElementById('country');
 const countryCodeSpan = document.getElementById('countryCode');
 
@@ -66,12 +44,10 @@ if (registerForm) {
     const firstName = document.getElementById("firstName").value.trim();
     const lastName = document.getElementById("lastName").value.trim();
     const email = document.getElementById("email").value.trim();
-    // If you want country code from dropdown, get from selected-country text or other input
-    // For now just set a variable if needed.
-    const countryCode = "Example Code"; // Adjust this to your logic if needed
     const phone = document.getElementById("phone").value.trim();
     const password = document.getElementById("password").value;
     const confirmPassword = document.getElementById("confirmPassword").value;
+    const countryCode = countrySelect.value;
     const message = document.getElementById("message");
 
     if (password !== confirmPassword) {
@@ -92,15 +68,35 @@ if (registerForm) {
       return;
     }
 
-    const fullPhone = countryCode + phone;
-
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      message.style.color = "green";
-      message.textContent = "Registration Successful! Redirecting to login... ✅";
-      setTimeout(() => {
-        window.location.href = "login.html";
-      }, 2000);
+
+      // ✅ OTP তৈরি
+      const otp = Math.floor(100000 + Math.random() * 900000);
+      const fullName = firstName + " " + lastName;
+
+      // ✅ EmailJS দিয়ে পাঠাও
+      const params = {
+        email: email,
+        name: fullName,
+        message: `Your OTP is: ${otp}`,
+        time: new Date().toLocaleString()
+      };
+
+      emailjs.send("service_cwhsnkd", "template_g11jib9", params)
+        .then(() => {
+          message.style.color = "green";
+          message.textContent = "Registration successful! OTP sent to your email ✅";
+          setTimeout(() => {
+            window.location.href = "login.html";
+          }, 3000);
+        })
+        .catch((error) => {
+          console.error("EmailJS Error:", error);
+          message.style.color = "orange";
+          message.textContent = "Registered but OTP email failed!";
+        });
+
     } catch (error) {
       message.style.color = "red";
       message.textContent = "Registration failed: " + error.message;
@@ -135,13 +131,13 @@ if (loginForm) {
 }
 
 // ===========================
-// ✅ Balance Tap Logic Here
+// ✅ Balance Tap Logic
 // ===========================
 const balanceBox = document.querySelector(".balance-box");
 
 if (balanceBox) {
-  let actualBalance = balanceBox.textContent.trim(); // Save the real balance
-  balanceBox.textContent = "••••"; // Initially hidden
+  let actualBalance = balanceBox.textContent.trim();
+  balanceBox.textContent = "••••";
 
   balanceBox.addEventListener("click", () => {
     balanceBox.textContent = actualBalance;
@@ -167,7 +163,13 @@ function closeDepositModal() {
     modal.style.display = "none";
   }
 }
-
-// Optional: Expose modal functions to global scope
 window.showDepositModal = showDepositModal;
 window.closeDepositModal = closeDepositModal;
+
+// ✅ Show UID if user logged in
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+onAuthStateChanged(auth, user => {
+  if (user && document.getElementById("userUid")) {
+    document.getElementById("userUid").innerText = user.uid;
+  }
+});
