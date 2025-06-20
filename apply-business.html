@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Apply for Business</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to bottom right, #aee1f9, #c1f0ff, #d4f1ff);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(5px);
+    }
+
+    .glass-box {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+      border-radius: 20px;
+      padding: 2rem;
+      width: 90%;
+      max-width: 420px;
+      color: #333;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    h2 {
+      text-align: center;
+      color: #0066d6;
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      font-weight: 500;
+      display: block;
+      margin-bottom: 0.3rem;
+      color: #004c90;
+    }
+
+    input[type="text"],
+    textarea,
+    input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 1rem;
+      background-color: rgba(255, 255, 255, 0.8);
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      background-color: #0099ff;
+      color: white;
+      padding: 10px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #007bd6;
+    }
+
+    .note {
+      font-size: 0.85rem;
+      color: #333;
+      text-align: center;
+      margin-top: 1rem;
+    }
+    select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 1rem;
+  background-color: rgba(255, 255, 255, 0.8);
+  outline: none;
+  color: #333;
+}
+  </style>
+</head>
+<body>
+  <div class="glass-box">
+    <h2>Apply for Business</h2>
+    <form action="#" method="post" enctype="multipart/form-data">
+      <label for="businessName">Business Name</label>
+      <input type="text" id="businessName" name="businessName" required />
+
+      <label for="address">Full Address</label>
+      <textarea id="address" name="address" rows="3" required></textarea>
+
+      <label for="passport">Passport Number</label>
+      <input type="text" id="passport" name="passport" required />
+
+      <label for="documentType">Select Document Type</label>
+<select id="documentType" name="documentType" required>
+  <option value="">-- Please select --</option>
+  <option value="trade_licence">📄 Trade Licence</option>
+  <option value="residence_permit">🏠 Residence Permit</option>
+  <option value="passport">🛂 Passport</option>
+</select>
+      </label>
+      <input type="file" id="documents" name="documents" accept=".pdf,.jpg,.jpeg,.png" required />
+
+      <button type="submit">Submit Application</button>
+    </form>
+    <div class="note">
+      Your application will be reviewed shortly.
+    </div>
+  </div>
+</body>
+</html>

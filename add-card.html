@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add Card | InstaCash</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, rgba(135, 206, 250, 0.6), rgba(173, 216, 230, 0.6));
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .card-container {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+      max-width: 420px;
+      width: 100%;
+      color: #002244;
+    }
+
+    .card-icon {
+      text-align: center;
+      font-size: 3rem;
+      color: #002244;
+      margin-bottom: 1rem;
+    }
+
+    .card-container h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #002244;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 0.9rem;
+      color: #002244;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid rgba(0, 34, 68, 0.3);
+      border-radius: 10px;
+      font-size: 1rem;
+      background: rgba(255, 255, 255, 0.4);
+      color: #002244;
+      outline: none;
+    }
+
+    .form-group input::placeholder {
+      color: #447799;
+    }
+
+    .form-group input:focus {
+      border-color: #00bbff;
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #00aaff, #0066d6);
+      border: none;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .submit-btn:hover {
+      background: linear-gradient(135deg, #0099ee, #0055cc);
+    }
+
+    .back-link {
+      display: block;
+      margin-top: 1.5rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #002244;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="card-container">
+    <div class="card-icon">
+      <i class="fas fa-credit-card"></i>
+    </div>
+    <h2>Add New Card</h2>
+    <form onsubmit="event.preventDefault(); alert('✅ Card added successfully!');">
+      <div class="form-group">
+        <label for="cardName">Cardholder Name</label>
+        <input type="text" id="cardName" placeholder="e.g., Sami Ahmed" required />
+      </div>
+      <div class="form-group">
+        <label for="cardNumber">Card Number</label>
+        <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" required />
+      </div>
+      <div class="form-group">
+        <label for="expiry">Expiry Date</label>
+        <input type="text" id="expiry" placeholder="MM/YY" required />
+      </div>
+      <div class="form-group">
+        <label for="cvv">CVV</label>
+        <input type="password" id="cvv" placeholder="•••" required />
+      </div>
+      <button class="submit-btn" type="submit">Add Card</button>
+    </form>
+    <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+  </div>
+  <script>
+  const cardNumberInput = document.getElementById("cardNumber");
+
+  cardNumberInput.addEventListener("input", function (e) {
+    let value = e.target.value;
+
+    // শুধুমাত্র নাম্বার রাখি
+    value = value.replace(/\D/g, '');
+
+    // ৪ ডিজিট পরপর স্পেস বসাই
+    let formattedValue = value.match(/.{1,4}/g);
+    if (formattedValue) {
+      e.target.value = formattedValue.join(" ");
+    } else {
+      e.target.value = "";
+    }
+  });
+
+  // কপি-পেস্টেও কাজ করার জন্য
+  cardNumberInput.addEventListener("paste", function (e) {
+    e.preventDefault();
+    const paste = (e.clipboardData || window.clipboardData).getData("text");
+    const digits = paste.replace(/\D/g, "").slice(0, 16);
+    const groups = digits.match(/.{1,4}/g);
+    cardNumberInput.value = groups ? groups.join(" ") : "";
+  });
+</script>
+<script>
+  const expiryInput = document.getElementById("expiry");
+
+  expiryInput.addEventListener("input", function (e) {
+    let value = e.target.value;
+
+    // শুধুমাত্র সংখ্যা ও / রাখবো
+    value = value.replace(/[^\d]/g, '');
+
+    if (value.length > 2) {
+      // ২ সংখ্যার পরে / যোগ করবো
+      value = value.slice(0, 2) + '/' + value.slice(2, 4);
+    }
+    e.target.value = value;
+  });
+
+  // পেস্ট করার সময়ও ফরম্যাট ঠিক থাকবে
+  expiryInput.addEventListener("paste", function (e) {
+    e.preventDefault();
+    let paste = (e.clipboardData || window.clipboardData).getData('text');
+    paste = paste.replace(/[^\d]/g, '').slice(0, 4);
+    if (paste.length > 2) {
+      paste = paste.slice(0, 2) + '/' + paste.slice(2, 4);
+    }
+    expiryInput.value = paste;
+  });
+</script>
+</body>
+</html>

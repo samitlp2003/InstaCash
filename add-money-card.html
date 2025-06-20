@@ -90,8 +90,8 @@
     <h2>Add Money by Card</h2>
     <form>
       <input type="text" placeholder="Cardholder Name" required />
-      <input type="text" placeholder="Card Number" required />
-      <input type="text" placeholder="Expiry Date (MM/YY)" required />
+      <input type="text" id="cardNumber" placeholder="Card Number" required maxlength="19" />
+      <input type="text" id="expiryDate" placeholder="Expiry Date (MM/YY)" required maxlength="5" />
       <input type="text" placeholder="CVV" required />
       <input type="number" placeholder="Amount to Add" required />
       <button type="submit">Submit</button>
@@ -100,6 +100,68 @@
       <a href="add-money.html">← Go Back</a>
     </div>
   </div>
+
+  <script>
+    const cardNumberInput = document.getElementById("cardNumber");
+
+    cardNumberInput.addEventListener("input", function (e) {
+      let value = e.target.value;
+
+      // শুধুমাত্র সংখ্যা রাখি
+      value = value.replace(/\D/g, '');
+
+      // ৪ ডিজিট পর পর স্পেস বসাই
+      let formattedValue = value.match(/.{1,4}/g);
+      if (formattedValue) {
+        e.target.value = formattedValue.join(" ");
+      } else {
+        e.target.value = "";
+      }
+      cardNumberInput.addEventListener("input", function (e) {
+  let value = e.target.value;
+
+  // শুধুমাত্র সংখ্যা রাখি
+  value = value.replace(/\D/g, '');
+
+  // ১৬ ডিজিটের বেশি হলে কেটে দেই
+  if (value.length > 16) {
+    value = value.slice(0, 16);
+  }
+
+  // ৪ ডিজিট পর পর স্পেস বসাই
+  let formattedValue = value.match(/.{1,4}/g);
+  if (formattedValue) {
+    e.target.value = formattedValue.join(" ");
+  } else {
+    e.target.value = "";
+  }
+});
+    });
+
+    // কপি-পেস্টেও কাজ করার জন্য
+    cardNumberInput.addEventListener("paste", function (e) {
+      e.preventDefault();
+      const paste = (e.clipboardData || window.clipboardData).getData("text");
+      const digits = paste.replace(/\D/g, "").slice(0, 16);
+      const groups = digits.match(/.{1,4}/g);
+      cardNumberInput.value = groups ? groups.join(" ") : "";
+    });
+    const expiryDateInput = document.getElementById("expiryDate");
+
+expiryDateInput.addEventListener("input", function(e) {
+  let value = e.target.value;
+
+  // শুধু সংখ্যা আর / রাখব
+  value = value.replace(/[^\d]/g, '');
+
+  // ২ ডিজিট লেখার পর অটো / বসানো
+  if (value.length > 2) {
+    value = value.slice(0, 2) + '/' + value.slice(2, 4);
+  }
+
+  e.target.value = value;
+});
+  </script>
 
 </body>
 </html>
