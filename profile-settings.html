@@ -1,7 +1,166 @@
 <!DOCTYPE html>
-<html>
-<head><title>Profile Settings</title></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile Settings | InstaCash</title>
+
+  <!-- 🔵 আগের সব ডিজাইন ঠিক রাখা হয়েছে -->
+  <style>
+    body{
+      font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+      background: linear-gradient(135deg, rgba(135, 206, 250, 0.6), rgba(173, 216, 230, 0.6));
+      backdrop-filter:blur(10px);
+      margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh
+    }
+    .container{
+      background:rgba(255,255,255,.3);
+      border-radius:15px;padding:30px 40px;box-shadow:0 8px 32px rgba(31,38,135,.37);
+      width:400px;max-width:95%;color:#003366
+    }
+    h2{text-align:center;margin-bottom:25px;font-weight:700}
+    .profile-pic-container{display:flex;justify-content:center;margin-bottom:20px;position:relative}
+    .profile-pic-container img{width:120px;height:120px;border-radius:50%;object-fit:cover;border:4px solid #0066cc}
+    .upload-btn-wrapper{position:absolute;bottom:0;right:0}
+    .upload-btn-wrapper button{background:#0066cc;color:#fff;border:none;padding:7px 14px;border-radius:12px;cursor:pointer;font-size:.9rem}
+    .upload-btn-wrapper input[type=file]{position:absolute;left:0;top:0;opacity:0;cursor:pointer;width:100%;height:100%}
+    label{font-weight:600;margin-top:10px;display:block}
+    input[type=text],input[type=email],input[type=password]{
+      width:100%;padding:10px;margin-top:6px;margin-bottom:15px;border:1.8px solid #0066cc;
+      border-radius:8px;font-size:1rem;color:#003366;background:transparent
+    }
+    button.save-btn{
+      background:#0066cc;color:#fff;border:none;padding:12px;border-radius:12px;font-size:1.1rem;
+      cursor:pointer;width:100%;font-weight:700;transition:background .3s
+    }
+    button.save-btn:hover{background:#004a99}
+    .message{text-align:center;font-weight:600;margin-top:10px;min-height:20px}
+    .user-email{font-size:.95rem;margin-bottom:15px;color:#004080;text-align:center;font-weight:600;user-select:text}
+  </style>
+</head>
 <body>
-  <h2>Welcome to Profile Settings</h2>
+
+  <div class="container">
+    <h2>Profile Settings</h2>
+
+    <!-- profile picture -->
+    <div class="profile-pic-container">
+      <img id="profilePic" src="https://i.pravatar.cc/150?img=3" alt="Profile Picture">
+      <div class="upload-btn-wrapper">
+        <button>Change</button>
+        <input type="file" id="profilePicInput" accept="image/*">
+      </div>
+    </div>
+
+    <!-- email -->
+    <div class="user-email">Registered Email: <span id="userEmailDisplay">Loading...</span></div>
+
+    <!-- name -->
+    <label for="profileName">Profile Name</label>
+    <input type="text" id="profileName" placeholder="Enter your profile name">
+
+    <!-- passwords -->
+    <label for="oldPassword">Old Password</label>
+    <input type="password" id="oldPassword" placeholder="Enter old password">
+
+    <label for="newPassword">New Password</label>
+    <input type="password" id="newPassword" placeholder="Enter new password">
+
+    <label for="confirmPassword">Confirm New Password</label>
+    <input type="password" id="confirmPassword" placeholder="Confirm new password">
+
+    <button class="save-btn" id="saveBtn">Save Changes</button>
+    <div class="message" id="message"></div>
+  </div>
+
+  <!-- 🔧 functional script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getAuth, onAuthStateChanged,
+      updatePassword, reauthenticateWithCredential,
+      EmailAuthProvider, updateProfile
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    /* firebase init */
+    const firebaseConfig = {
+      apiKey:"AIzaSyBH05N22D-ZSpjrtiJTLZGKxERZzpaqheg",
+      authDomain:"instacash-e1d5d.firebaseapp.com",
+      projectId:"instacash-e1d5d",
+      storageBucket:"instacash-e1d5d.appspot.com",
+      messagingSenderId:"123825323751",
+      appId:"1:123825323751:web:624eea7c7a733cda2d6c42"
+    };
+    initializeApp(firebaseConfig);
+    const auth = getAuth();
+
+    /* dom refs */
+    const picImg  = document.getElementById('profilePic');
+    const picInp  = document.getElementById('profilePicInput');
+    const nameInp = document.getElementById('profileName');
+    const emailSp = document.getElementById('userEmailDisplay');
+    const oldP    = document.getElementById('oldPassword');
+    const newP    = document.getElementById('newPassword');
+    const conP    = document.getElementById('confirmPassword');
+    const saveBt  = document.getElementById('saveBtn');
+    const msgBox  = document.getElementById('message');
+
+    let userRef = null;
+
+    /* 1️⃣ localStorage → প্রথমে প্রোফাইল পিক বসাও */
+    const picLS = localStorage.getItem('userProfilePic');
+    if (picLS) picImg.src = picLS;
+
+    /* 2️⃣ firebase user লোড */
+    onAuthStateChanged(auth, u=>{
+      if(!u){ emailSp.textContent='Not logged in'; return; }
+      userRef = u;
+      emailSp.textContent = u.email;
+      nameInp.value = u.displayName || '';
+      /* localStorage থাকলে সেটাই, নইলে firebase photoURL, নইলে default */
+      picImg.src = picLS || u.photoURL || picImg.src;
+    });
+
+    /* 3️⃣ ছবি আপলোড করলে preview + localStorage সেভ */
+    picInp.addEventListener('change',e=>{
+      const f=e.target.files[0]; if(!f) return;
+      const r=new FileReader();
+      r.onload=ev=>{
+        picImg.src = ev.target.result;
+        localStorage.setItem('userProfilePic', ev.target.result);
+      };
+      r.readAsDataURL(f);
+    });
+
+    /* 4️⃣ save changes */
+    saveBt.addEventListener('click', async ()=>{
+      if(!userRef){return showErr('User not logged in');}
+      const newName=nameInp.value.trim();
+      const o=oldP.value,n=newP.value,c=conP.value;
+
+      /* password section */
+      if(n||c||o){
+        if(!o)          return showErr('Enter old password first');
+        if(n!==c)       return showErr("Passwords don't match");
+        if(n.length<6)  return showErr('Password ≥ 6 chars');
+        try{
+          const cred = EmailAuthProvider.credential(userRef.email,o);
+          await reauthenticateWithCredential(userRef,cred);
+          await updatePassword(userRef,n);
+          showOk('Password updated ✅');
+        }catch(err){return showErr('Wrong old password');}
+      }
+
+      /* name update (photoURL আপাতত Firebase-এ না পাঠাচ্ছি) */
+      try{
+        await updateProfile(userRef,{displayName:newName});
+        showOk('Profile name saved ✅');
+      }catch(err){showErr('Update error: '+err.message);}
+    });
+
+    /* helpers */
+    function showOk(t){msgBox.style.color='green';msgBox.textContent=t;}
+    function showErr(t){msgBox.style.color='red';msgBox.textContent=t;}
+  </script>
 </body>
 </html>

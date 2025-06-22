@@ -2,8 +2,9 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(120deg, #ff6b6b, #ffb347);
-  height: 100vh;
+  background: linear-gradient(135deg, rgba(6, 147, 235, 0.3), rgba(255,255,255,0.4));
+  backdrop-filter: blur(10px);
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -21,7 +22,7 @@ body {
 
 .container h2 {
   margin-bottom: 20px;
-  color: #ff6b6b;
+  color: #3399ff;
 }
 
 input {
@@ -36,7 +37,7 @@ input {
 button {
   width: 100%;
   padding: 12px;
-  background-color: #ff6b6b;
+  background-color: #3399ff; /* সফট ব্লু */
   color: white;
   border: none;
   border-radius: 8px;
@@ -46,13 +47,14 @@ button {
 }
 
 button:hover {
-  background-color: #e74c3c;
+  background-color: #2a7cd6; /* হোভার হলে একটু গাঢ় নীল */
 }
 
 #message {
   margin-top: 10px;
   color: red;
 }
+
 select {
   width: 100%;
   padding: 12px;
@@ -62,6 +64,7 @@ select {
   font-size: 16px;
   background: white;
 }
+
 .phone-group {
   display: flex;
   align-items: center;

@@ -18,7 +18,7 @@
       }
 
       body {
-        background-color: #f2f4f7;
+       background: linear-gradient(135deg, rgba(135, 206, 250, 0.6), rgba(173, 216, 230, 0.6));
         color: #333;
       }
 
@@ -67,7 +67,7 @@
 
       /* Balance Section */
       .balance-section {
-        background: linear-gradient(135deg, #ffffff, #f0f3f8);
+        background: linear-gradient(135deg, #c0def0, #b8cef3);
         box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
         padding: 0.8rem 1rem;
         border-radius: 1rem;
@@ -89,7 +89,7 @@
       .balance-left .amount {
         font-size: 1.4rem;
         font-weight: 600;
-        color: #00aa55;
+        color: #0833f1;
       }
 
       .balance-left small {
@@ -116,7 +116,7 @@
       .quick-actions,
       .recommended,
       .favourites {
-        background-color: #fff;
+        background-color: #e9f0f7;
         padding: 1rem;
         margin-top: 1rem;
         border-radius: 1rem;
@@ -555,6 +555,15 @@ document.addEventListener("click", () => {
       balanceAmountEl.textContent = originalBalanceText;
     }
   }
+  window.addEventListener('DOMContentLoaded', () => {
+  const savedPic = localStorage.getItem('userProfilePic');
+  if(savedPic) {
+    const profileImg = document.querySelector('.profile-box img');
+    if(profileImg) {
+      profileImg.src = savedPic;
+    }
+  }
+});
 </script>
 <script type="module" src="app.js"></script>
 
