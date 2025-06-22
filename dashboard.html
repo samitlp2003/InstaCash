@@ -117,8 +117,8 @@
       .recommended,
       .favourites {
         background-color: #e9f0f7;
-        padding: 1.5rem;
-        margin-top: 2rem;
+        padding: 0.5rem;
+        margin-top: 1rem;
         border-radius: 1rem;
       }
 
@@ -151,39 +151,83 @@
         color: #0066d6;
       }
 
-      /* Bottom Nav */
-      .bottom-nav {
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-        background-color: #fff;
-        border-top: 1px solid #ccc;
-        display: flex;
-        justify-content: space-around;
-        padding: 0.5rem 0;
-      }
+    /* =========================
+   BOTTOM NAV — screenshot style
+   ========================= */
+.bottom-nav{
+  position:fixed;
+  left:0; right:0; bottom:0;
+  height:90px;               /* screenshot height */
+  background:#fff;
+  box-shadow:0 -2px 12px rgba(0,0,0,.08);
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  z-index:99;
+  padding:0 22px;            /* little side gutter */
+}
 
-      .bottom-nav i {
-        font-size: 1.2rem;
-        color: #777;
-        transition: color 0.2s;
-      }
+/* কার্ভ তৈরি */
+.bottom-nav::before{
+  content:'';
+  position:absolute;
+  top:-44px;                 /* half of 90px – little overlap */
+  left:50%;
+  transform:translateX(-50%);
+  width:130px; height:130px; /* বড় সাদা গোল = concave */
+  background:#fff;
+  border-radius:50%;
+  box-shadow:0 -4px 12px rgba(0,0,0,.04);
+}
 
-      .bottom-nav i.active,
-      .bottom-nav i:hover {
-        color: #0066d6;
-      }
+/* সাধারণ আইটেম */
+.nav-item{
+  font-size:28px;
+  color:#888;
+  text-decoration:none;
+  transition:.25s;
+  z-index:1;                 /* pseudo-element এর উপর রাখতে */
+}
+.nav-item.active,
+.nav-item:hover{
+  color:#2359ee;             /*  অ্যাক্টিভ কালার */
+}
 
-      /* Mobile Fixes */
-      @media (max-width: 360px) {
-        .icon-grid {
-          gap: 0.6rem;
-        }
+/* FAB */
+.fab-btn{
+  position:absolute;
+  top:-46px;                 /* ⬆️ উঠিয়ে আনা */
+  left:50%; transform:translateX(-50%);
+  width:82px; height:82px;
+  background:linear-gradient(145deg,#2151ec,#1c4dee);
+  border-radius:50%;
+  display:flex; justify-content:center; align-items:center;
+  font-size:40px;
+  color:#fff;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+  z-index:2;
+}
 
-        .icon-grid i {
+/* “Send Money” লেবেল */
+.fab-label{
+  position:absolute;
+  top:52px;                  /* FAB এর নিচে ঠিক মাঝে */
+  left:50%; transform:translateX(-50%);
+  font-size:18px;
+  color:#777;
+  font-weight:500;
+  z-index:1;
+}
+
+/* ছোট স্ক্রিনে আইকন সাইজ টিউন */
+@media (max-width:400px){
+  .nav-item{font-size:24px;}
+  .fab-btn{width:72px;height:72px;font-size:34px;}
+  .fab-label{font-size:16px;}
+}
+       .icon-grid i {
           font-size: 1.35rem;
         }
-      }
 
       /* Country Select & Dropdown */
       .country-select {
@@ -343,14 +387,20 @@
     </div>
   </div>
 </div>
-    <!-- Bottom Navigation -->
-    <div class="bottom-nav">
-      <i class="fas fa-home active"></i>
-      <i class="fas fa-shopping-cart"></i>
-      <i class="fas fa-qrcode"></i>
-      <i class="fas fa-dollar-sign"></i>
-      <i class="fas fa-map-marker-alt"></i>
-    </div>
+    <!-- 🔻  Bottom Navigation  🔻 -->
+<div class="bottom-nav">
+  <!-- Left side icons -->
+  <a href="#home"        class="nav-item active"><i class="fas fa-home"></i></a>
+  <a href="#history"     class="nav-item"><i class="fas fa-clock-rotate-left"></i></a>
+
+  <!--  FAB  -->
+  <div class="fab-btn"><i class="fas fa-paper-plane"></i></div>
+  <span class="fab-label">Send Money</span>
+
+  <!-- Right side icons -->
+  <a href="#contacts"    class="nav-item"><i class="fas fa-users"></i></a>
+  <a href="#menu"        class="nav-item"><i class="fas fa-th-large"></i></a>
+</div>
 
     <script>
       // কারেন্সি ম্যাপ
