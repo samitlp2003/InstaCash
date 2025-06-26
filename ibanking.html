@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>I Banking Transfer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f0f8ff;
+    }
+
+    h2 {
+      color: #0066d6;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    #amountSection {
+      display: none;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #ccc;
+    }
+
+    #convertedAmount {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #0066d6;
+    }
+
+    button {
+      background-color: #0066d6;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #004cb3;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🔁 I Banking Transfer</h2>
+
+  <div id="step1">
+    <label for="bank">Bank List</label>
+    <select id="bank">
+      <option value="">Select a bank</option>
+      <option value="DBBL">Dutch Bangla Bank</option>
+      <option value="BRAC">BRAC Bank</option>
+      <option value="IBBL">Islami Bank</option>
+      <option value="UCB">UCB Bank</option>
+    </select>
+
+    <label for="recipient">Recipient Name</label>
+    <input type="text" id="recipient" placeholder="Enter recipient's name" />
+
+    <label for="account">Account Number</label>
+    <input type="text" id="account" placeholder="Enter account number" />
+
+    <label for="branch">Branch Name</label>
+    <input type="text" id="branch" placeholder="Enter branch name" />
+
+    <button onclick="goToAmount()">Next</button>
+  </div>
+
+  <div id="amountSection">
+    <label for="amount">Enter Amount (USD)</label>
+    <input type="number" id="amount" placeholder="Amount in USD" oninput="convertToBDT()" />
+
+    <div id="convertedAmount"></div>
+
+    <button style="margin-top:20px;" onclick="submitTransfer()">Submit</button>
+  </div>
+
+  <script>
+    function goToAmount() {
+      // validation check (basic)
+      const bank = document.getElementById('bank').value;
+      const recipient = document.getElementById('recipient').value;
+      const account = document.getElementById('account').value;
+      const branch = document.getElementById('branch').value;
+
+      if (!bank || !recipient || !account || !branch) {
+        alert("Please fill all fields before proceeding.");
+        return;
+      }
+
+      // Hide step 1, show amount section
+      document.getElementById("step1").style.display = "none";
+      document.getElementById("amountSection").style.display = "block";
+    }
+
+    function convertToBDT() {
+      const amountUSD = parseFloat(document.getElementById("amount").value);
+      const rate = 117; // 1 USD = 117 BDT (example rate)
+
+      if (!isNaN(amountUSD) && amountUSD > 0) {
+        const bdt = (amountUSD * rate).toFixed(2);
+        document.getElementById("convertedAmount").innerText = `আপনার পাঠানো টাকা বাংলাদেশি টাকায় = ৳${bdt}`;
+      } else {
+        document.getElementById("convertedAmount").innerText = "";
+      }
+    }
+
+    function submitTransfer() {
+      alert("✅ Transfer Submitted Successfully!");
+      // এখানে তুই ডেটাবেজে পুশ বা অন্য কোনো ফাংশন কল করতে পারিস
+    }
+  </script>
+
+</body>
+</html>
