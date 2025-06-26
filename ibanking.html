@@ -93,7 +93,6 @@
 
   <script>
     function goToAmount() {
-      // validation check (basic)
       const bank = document.getElementById('bank').value;
       const recipient = document.getElementById('recipient').value;
       const account = document.getElementById('account').value;
@@ -104,14 +103,13 @@
         return;
       }
 
-      // Hide step 1, show amount section
       document.getElementById("step1").style.display = "none";
       document.getElementById("amountSection").style.display = "block";
     }
 
     function convertToBDT() {
       const amountUSD = parseFloat(document.getElementById("amount").value);
-      const rate = 117; // 1 USD = 117 BDT (example rate)
+      const rate = 117;
 
       if (!isNaN(amountUSD) && amountUSD > 0) {
         const bdt = (amountUSD * rate).toFixed(2);
@@ -122,8 +120,8 @@
     }
 
     function submitTransfer() {
-      alert("✅ Transfer Submitted Successfully!");
-      // এখানে তুই ডেটাবেজে পুশ বা অন্য কোনো ফাংশন কল করতে পারিস
+      // নতুন পেজে পাঠানো হবে
+      window.location.href = "success.html";
     }
   </script>
 

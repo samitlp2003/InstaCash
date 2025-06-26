@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Transfer Success</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #e6f9f0;
+      padding: 40px;
+      text-align: center;
+    }
+
+    h1 {
+      color: green;
+      font-size: 2rem;
+    }
+
+    .options {
+      margin-top: 40px;
+    }
+
+    .options button {
+      padding: 12px 24px;
+      margin: 10px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background-color: #0077cc;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .options button:hover {
+      background-color: #005fa3;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>✅ Transfer Submitted Successfully!</h1>
+
+  <div class="options">
+    <button onclick="location.href='dashboard.html'">Go to Dashboard</button>
+    <button onclick="location.href='transactions.html'">Transaction History</button>
+    <button onclick="window.print()">Print Your Receipt</button>
+  </div>
+
+</body>
+</html>
