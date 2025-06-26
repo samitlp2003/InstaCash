@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>M Banking Transfer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: linear-gradient(135deg, rgba(135, 206, 250, 0.6), rgba(173, 216, 230, 0.6));
+    }
+
+    h2 {
+      color: #2f4beb;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    #amountSection {
+      display: none;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #ccc;
+    }
+
+    #convertedAmount {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #ff6b00;
+    }
+
+    button {
+      background-color: #346fee;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #1c65ee;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>📱 M Banking Transfer</h2>
+
+  <div id="step1">
+    <label for="app">Mobile Banking App</label>
+    <select id="app">
+      <option value="">Select an app</option>
+      <option value="bKash">bKash</option>
+      <option value="Nagad">Nagad</option>
+      <option value="Rocket">Rocket</option>
+      <option value="Upay">Upay</option>
+    </select>
+
+    <label for="mobile">Receiver Mobile Number</label>
+    <input type="text" id="mobile" placeholder="Enter mobile number" />
+
+    <label for="name">Receiver Name</label>
+    <input type="text" id="name" placeholder="Enter recipient's name" />
+
+    <button onclick="goToAmount()">Next</button>
+  </div>
+
+  <div id="amountSection">
+    <label for="amount">Enter Amount (USD)</label>
+    <input type="number" id="amount" placeholder="Amount in USD" oninput="convertToBDT()" />
+
+    <div id="convertedAmount"></div>
+
+    <button style="margin-top:20px;" onclick="submitTransfer()">Submit</button>
+  </div>
+
+  <script>
+    function goToAmount() {
+      const app = document.getElementById('app').value;
+      const mobile = document.getElementById('mobile').value;
+      const name = document.getElementById('name').value;
+
+      if (!app || !mobile || !name) {
+        alert("Please fill all fields before proceeding.");
+        return;
+      }
+
+      document.getElementById("step1").style.display = "none";
+      document.getElementById("amountSection").style.display = "block";
+    }
+
+    function convertToBDT() {
+      const amountUSD = parseFloat(document.getElementById("amount").value);
+      const rate = 117;
+
+      if (!isNaN(amountUSD) && amountUSD > 0) {
+        const bdt = (amountUSD * rate).toFixed(2);
+        document.getElementById("convertedAmount").innerText = `আপনার পাঠানো টাকা বাংলাদেশি টাকায় = ৳${bdt}`;
+      } else {
+        document.getElementById("convertedAmount").innerText = "";
+      }
+    }
+
+    function submitTransfer() {
+      window.location.href = "success.html";
+    }
+  </script>
+
+</body>
+</html>
